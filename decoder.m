@@ -1,4 +1,4 @@
-function[rec_sig, r_dct] = decoder(Abit, bitstream,num,txt)
+function[rec_sig, r_dct] = decoder(Abit, bitstream,num,txt,g)
 
 %[num,txt,raw] = xlsread('MaxTable2.xlsx');
 Abit = Abit;
@@ -75,15 +75,16 @@ for j = 1:size(Abit,2)
         sample = bi2de(partBit{i}).*si_stepSize + si_minDCT;
     end
     
-    r_dct = [r_dct; sample];
-    
+    %r_dct = [r_dct; sample];
+    r_dct(i,j) = sample;
     %rec_sig = [rec_sig; idct(r_dct)./sqrt(size(Abit,1))];
     
     startIdx = endIdx +1;
+    
     end
     %r_dct = [r_dct sample];
-     inv_dct = idct(r_dct)./sqrt(size(Abit,1));
-     rec_sig = [rec_sig; inv_dct];
+     %inv_dct = idct(r_dct./log10(abs(g(j))));
+     rec_sig = [rec_sig; idct(r_dct(1:end,j)./log10(abs(g(j))))];
 end
 
 
